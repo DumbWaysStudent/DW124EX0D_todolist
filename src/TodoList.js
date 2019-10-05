@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {
   Button,
+  Icon
 } from 'native-base'
 
 
@@ -33,11 +34,21 @@ export default class TodoList extends Component {
   }
 
   _handleAddBtn = () => {
-    let taskname = this.state.text
-    let id = this.state.dataNya.length + 1
-    const abc = {"id" : id ,"taskname" : taskname}   
-    this.setState({dataNya : [...this.state.dataNya, abc], text : ''})
+    if(this.state.text != '') {
+      let taskname = this.state.text
+      let id = this.state.dataNya.length + 1
+      const abc = {"id" : id ,"taskname" : taskname}   
+      this.setState({dataNya : [...this.state.dataNya, abc], text : ''})
+    }
+    else {
+      alert("Task tidak boleh kosong")
+    }
+  }
 
+  _deleteBtn = (yangdihapus) => {
+    const { dataNya } = this.state
+    const filtered = dataNya.filter(function(item) { return item.id != yangdihapus.id; }); 
+    this.setState({dataNya : filtered})
   }
   render() {
     return (
@@ -60,6 +71,9 @@ export default class TodoList extends Component {
           return(
             <View key={item.id} style={styles.listTask}>
                 <Text style={styles.fontList}>{item.taskname}</Text>
+                <Icon 
+                onPress={() => this._deleteBtn(item)} 
+                style={styles.icnTrash} name="trash"/>
             </View>
           )
             
@@ -77,9 +91,10 @@ const styles = StyleSheet.create({
     },
     listTask : {
         borderWidth:1,
-        alignItems:"flex-start",
-        justifyContent:"center",
-        borderRadius:8
+        alignItems:"center",
+        justifyContent:"space-between",
+        borderRadius:8,
+        flexDirection:"row"
     },
     fontList : {
       fontSize:20,
@@ -102,5 +117,9 @@ const styles = StyleSheet.create({
       justifyContent:"center",
       borderRadius:10,
       height : 40
+    },
+    icnTrash : {
+      paddingRight:10,
+      color:'red'
     }
 })
