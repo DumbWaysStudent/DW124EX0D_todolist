@@ -7,7 +7,8 @@ import {
 } from 'react-native';
 import {
   Button,
-  Icon
+  Icon,
+  CheckBox
 } from 'native-base'
 
 
@@ -19,15 +20,18 @@ export default class TodoList extends Component {
       dataNya : [
         {
             id : 0,
-            taskname : "apayak"
+            taskname : "apayak",
+            isDone : false
         },
         {
             id : 1,
-            taskname : "cobadulu"
+            taskname : "cobadulu",
+            isDone : false
         },
         {
             id : 2,
-            taskname : "babbaba"
+            taskname : "babbaba",
+            isDone : false
         },
       ]
     }
@@ -50,6 +54,16 @@ export default class TodoList extends Component {
     const filtered = dataNya.filter(function(item) { return item.id != yangdihapus.id; }); 
     this.setState({dataNya : filtered})
   }
+
+  _handlePressCheckBox = (yangdiklik) => {
+    const {dataNya}  = this.state
+    let existeditem = dataNya.find(item => yangdiklik.id === item.id)
+    if(existeditem) {
+      existeditem.isDone = !yangdiklik.isDone
+      this.setState([...dataNya])
+    }
+    
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -70,7 +84,10 @@ export default class TodoList extends Component {
         {this.state.dataNya.map(item =>{
           return(
             <View key={item.id} style={styles.listTask}>
+              <View style={styles.checkboxWithText}>
+                <CheckBox checked={item.isDone} onPress={() => this._handlePressCheckBox(item)}/>
                 <Text style={styles.fontList}>{item.taskname}</Text>
+              </View>               
                 <Icon 
                 onPress={() => this._deleteBtn(item)} 
                 style={styles.icnTrash} name="trash"/>
@@ -98,7 +115,8 @@ const styles = StyleSheet.create({
     },
     fontList : {
       fontSize:20,
-      padding : 10
+      padding : 10,
+      marginLeft:10
     },
     inputContainer : {
       flexDirection:"row",
@@ -121,5 +139,9 @@ const styles = StyleSheet.create({
     icnTrash : {
       paddingRight:10,
       color:'red'
+    },
+    checkboxWithText :{
+      flexDirection : "row",
+      alignItems : "center"
     }
 })
