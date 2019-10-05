@@ -16,6 +16,9 @@ export default class TodoList extends Component {
   constructor() {
     super() 
     this.state = {
+      id : '',
+      editText:'',
+      edit : false,
       text : '',
       dataNya : [
         {
@@ -61,25 +64,53 @@ export default class TodoList extends Component {
     if(existeditem) {
       existeditem.isDone = !yangdiklik.isDone
       this.setState([...dataNya])
-    }
+    }  
+  }
+
+  _handleEdit = (yangmaudiedit) => {
+    const {dataNya}  = this.state
+    let idNya = dataNya.indexOf(yangmaudiedit)    
+    this.setState({editText : yangmaudiedit.taskname, edit : true, id : idNya})
+      
+  }
+  _handleChangeEdit = () => {
+    const {dataNya, id, editText}  = this.state
+    dataNya[id].taskname = editText
+    this.setState([...dataNya])
+    this.setState({text : '', edit : false, editText:''})
     
   }
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.inputContainer}>
+        {this.state.edit ? 
+        <View style={styles.inputContainer}>        
           <TextInput
+          style={styles.inputText}
+          value={this.state.editText}
+          onChangeText={text => this.setState({editText:text})}
+          />
+          <Button 
+          onPress={() => this._handleChangeEdit()}
+          style={styles.buttonAdd}>
+            <Text style={styles.textBtn}>Change</Text>
+          </Button>
+          </View> :
+           <View style={styles.inputContainer}> 
+           <TextInput
           style={styles.inputText}
           value={this.state.text}
           placeholder="New Todo"
           onChangeText={text => this.setState({text})}
           />
-          <Button 
+           <Button 
           onPress={() => this._handleAddBtn()}
           style={styles.buttonAdd}>
-            <Text>Add</Text>
+            <Text style={styles.textBtn}>Add</Text>
           </Button>
-        </View>
+          </View>
+          }
+        
         <View>
         {this.state.dataNya.map(item =>{
           return(
@@ -87,10 +118,16 @@ export default class TodoList extends Component {
               <View style={styles.checkboxWithText}>
                 <CheckBox checked={item.isDone} onPress={() => this._handlePressCheckBox(item)}/>
                 <Text style={styles.fontList}>{item.taskname}</Text>
-              </View>               
+              </View>
+              <View style={styles.iconContainer}>
+                <Icon 
+                onPress={() => this._handleEdit(item)} 
+                style={styles.icnEdit} name="create"/>               
                 <Icon 
                 onPress={() => this._deleteBtn(item)} 
                 style={styles.icnTrash} name="trash"/>
+              </View>
+                
             </View>
           )
             
@@ -143,5 +180,16 @@ const styles = StyleSheet.create({
     checkboxWithText :{
       flexDirection : "row",
       alignItems : "center"
+    },
+    icnEdit : {
+      paddingRight:10,
+    },
+    iconContainer : {
+      flexDirection:"row",
+      alignItems : "center"
+    },
+    textBtn : {
+      textTransform:'uppercase',
+      color : 'white'
     }
 })
