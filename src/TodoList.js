@@ -20,7 +20,7 @@ export default class TodoList extends Component {
       editText:'',
       edit : false,
       text : '',
-      dataNya : [
+      listtaskdata : [
         {
             id : 0,
             taskname : "apayak",
@@ -43,40 +43,40 @@ export default class TodoList extends Component {
   _handleAddBtn = () => {
     if(this.state.text != '') {
       let taskname = this.state.text
-      let id = this.state.dataNya.length + 1
+      let id = this.state.listtaskdata.length + 1
       const abc = {"id" : id ,"taskname" : taskname}   
-      this.setState({dataNya : [...this.state.dataNya, abc], text : ''})
+      this.setState({listtaskdata : [...this.state.listtaskdata, abc], text : ''})
     }
     else {
       alert("Task tidak boleh kosong")
     }
   }
 
-  _deleteBtn = (yangdihapus) => {
-    const { dataNya } = this.state
-    const filtered = dataNya.filter(function(item) { return item.id != yangdihapus.id; }); 
-    this.setState({dataNya : filtered})
+  _deleteBtn = (deleteditem) => {
+    const { listtaskdata } = this.state
+    const filtered = listtaskdata.filter(function(item) { return item.id != deleteditem.id; }); 
+    this.setState({listtaskdata : filtered})
   }
 
-  _handlePressCheckBox = (yangdiklik) => {
-    const {dataNya}  = this.state
-    let existeditem = dataNya.find(item => yangdiklik.id === item.id)
+  _handlePressCheckBox = (clickeditem) => {
+    const {listtaskdata}  = this.state
+    let existeditem = listtaskdata.find(item => clickeditem.id === item.id)
     if(existeditem) {
-      existeditem.isDone = !yangdiklik.isDone
-      this.setState([...dataNya])
+      existeditem.isDone = !clickeditem.isDone
+      this.setState({})
     }  
   }
 
-  _handleEdit = (yangmaudiedit) => {
-    const {dataNya}  = this.state
-    let idNya = dataNya.indexOf(yangmaudiedit)    
-    this.setState({editText : yangmaudiedit.taskname, edit : true, id : idNya})
+  _handleEdit = (wantedit) => {
+    const {listtaskdata}  = this.state
+    let idNya = listtaskdata.indexOf(wantedit)    
+    this.setState({editText : wantedit.taskname, edit : true, id : idNya})
       
   }
   _handleChangeEdit = () => {
-    const {dataNya, id, editText}  = this.state
-    dataNya[id].taskname = editText
-    this.setState([...dataNya])
+    const {listtaskdata, id, editText}  = this.state
+    listtaskdata[id].taskname = editText
+    this.setState([...listtaskdata])
     this.setState({text : '', edit : false, editText:''})
     
   }
@@ -112,7 +112,7 @@ export default class TodoList extends Component {
           }
         
         <View>
-        {this.state.dataNya.map(item =>{
+        {this.state.listtaskdata.map(item =>{
           return(
             <View key={item.id} style={styles.listTask}>
               <View style={styles.checkboxWithText}>
